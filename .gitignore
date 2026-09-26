@@ -1,0 +1,15 @@
+# Editor and OS cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Scratch space for drafts and captured output
+scratch/
+*.tmp
+
+# Python venvs, if any tooling is added later
+.venv/
+__pycache__/
