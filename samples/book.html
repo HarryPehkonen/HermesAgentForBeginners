@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.11" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Harri Pehkonen" />
+  <meta name="dcterms.date" content="2026-01-01" />
+  <title>Hermes Agent for Beginners</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">
+:root {
+--ink: #16181d;
+--ink-soft: #4a4f58;
+--paper: #ffffff;
+--rule: #dfe2e7;
+--accent: #1f4e79;
+--accent-soft: #eef3f8;
+--definitive: #a33b17;
+--definitive-soft: #fdf2ec;
+--code-bg: #f5f6f8;
+--measure: 34em;
+}
+html {
+font-size: 19px; 
+}
+body {
+color: var(--ink);
+background: var(--paper);
+font-family: "DejaVu Serif", Georgia, serif;
+line-height: 1.62;
+max-width: var(--measure);
+margin: 0 auto;
+padding: 2.2rem 1.2rem 4rem;
+-webkit-text-size-adjust: 100%;
+hanging-punctuation: first;
+}
+h1, h2, h3, h4 {
+font-family: "DejaVu Sans", "Helvetica Neue", Arial, sans-serif;
+color: var(--ink);
+line-height: 1.22;
+margin: 2.2em 0 0.5em;
+page-break-after: avoid;
+}
+h1 { font-size: 1.85rem; margin-top: 0; }
+h2 { font-size: 1.32rem; padding-bottom: 0.25rem; border-bottom: 2px solid var(--rule); }
+h3 { font-size: 1.08rem; }
+h4 { font-size: 1rem; color: var(--ink-soft); }
+p, li { margin: 0.65em 0; }
+a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+strong { font-weight: 700; }
+code, pre, kbd {
+font-family: "DejaVu Sans Mono", "SFMono-Regular", Consolas, monospace;
+font-size: 0.86em;
+}
+code {
+background: var(--code-bg);
+padding: 0.1em 0.28em;
+border-radius: 2px;
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--rule);
+border-radius: 4px;
+padding: 0.85rem 1rem;
+overflow-x: auto;
+line-height: 1.45;
+page-break-inside: avoid;
+}
+pre code { background: none; padding: 0; }
+blockquote {
+margin: 1.1em 0;
+padding: 0.1em 0 0.1em 1em;
+border-left: 3px solid var(--rule);
+color: var(--ink-soft);
+}
+table {
+border-collapse: collapse;
+width: 100%;
+margin: 1.3em 0;
+font-size: 0.94em;
+page-break-inside: avoid;
+}
+th, td {
+border-bottom: 1px solid var(--rule);
+padding: 0.5rem 0.6rem;
+text-align: left;
+vertical-align: top;
+}
+thead th {
+font-family: "DejaVu Sans", Arial, sans-serif;
+font-size: 0.86em;
+letter-spacing: 0.02em;
+text-transform: uppercase;
+color: var(--ink-soft);
+border-bottom: 2px solid var(--ink);
+}
+
+.definitive {
+background: var(--definitive-soft);
+border-left: 5px solid var(--definitive);
+border-radius: 3px;
+padding: 0.2rem 1rem 0.6rem;
+margin: 1.6em 0;
+page-break-inside: avoid;
+}
+.definitive-label {
+display: inline-block;
+font-family: "DejaVu Sans", Arial, sans-serif;
+font-size: 0.72em;
+font-weight: 700;
+letter-spacing: 0.09em;
+color: var(--definitive);
+margin-right: 0.15em;
+}
+.definitive p:first-child { margin-top: 0.7em; }
+
+nav#TOC, #TOC {
+background: var(--accent-soft);
+border: 1px solid var(--rule);
+border-radius: 4px;
+padding: 0.9rem 1.1rem;
+margin: 1.6em 0 2.4em;
+font-family: "DejaVu Sans", Arial, sans-serif;
+font-size: 0.92em;
+}
+#TOC ul { margin: 0.35em 0; padding-left: 1.1em; }
+#TOC li { margin: 0.18em 0; }
+#TOC a { text-decoration: none; }
+.generated-index p {
+font-family: "DejaVu Sans", Arial, sans-serif;
+font-size: 0.95em;
+margin: 0.35em 0;
+padding-left: 1.1em;
+text-indent: -1.1em; 
+}
+.generated-index a { text-decoration: none; }
+.generated-index a:hover { text-decoration: underline; }
+.idx-term { border-bottom: 1px dotted var(--rule); }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Hermes Agent for Beginners</h1>
+<p class="subtitle">Sample chapter — the curator</p>
+<p class="author">Harri Pehkonen</p>
+<p class="date">2026</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<h2 id="toc-title">Contents</h2>
+<ul>
+<li><a href="#the-curator-maintenance-for-a-library-that-grows-itself" id="toc-the-curator-maintenance-for-a-library-that-grows-itself">The
+curator: maintenance for a library that grows itself</a>
+<ul>
+<li><a href="#what-you-will-be-able-to-do" id="toc-what-you-will-be-able-to-do">What you will be able to
+do</a></li>
+<li><a href="#the-idea" id="toc-the-idea">The idea</a></li>
+<li><a href="#do-this" id="toc-do-this">Do this</a></li>
+<li><a href="#verify-it" id="toc-verify-it">Verify it</a></li>
+<li><a href="#what-broke-for-me" id="toc-what-broke-for-me">What broke
+for me</a></li>
+<li><a href="#pitfalls" id="toc-pitfalls">Pitfalls</a></li>
+<li><a href="#going-all-in-honestly" id="toc-going-all-in-honestly">Going all in, honestly</a></li>
+<li><a href="#where-to-go-next" id="toc-where-to-go-next">Where to go
+next</a></li>
+</ul></li>
+<li><a href="#key-ideas" id="toc-key-ideas">Key ideas</a></li>
+<li><a href="#index" id="toc-index">Index</a></li>
+</ul>
+</nav>
+<h1 id="the-curator-maintenance-for-a-library-that-grows-itself">The
+curator: maintenance for a library that grows itself</h1>
+<div id="definitive-scope" class="definitive">
+<p><span class="definitive-label">DEFINITIVE</span> — The curator only
+ever touches skills it has been given</p>
+<p>Before you change anything: the curator manages skills whose
+provenance says an agent created them. Skills you wrote, and skills that
+ship with Hermes, are out of its reach until you hand one over with
+<code>hermes curator adopt</code>. It also never deletes — the worst
+outcome is an archive you can restore.</p>
+</div>
+<h2 id="what-you-will-be-able-to-do">What you will be able to do</h2>
+<p>Run the <span class="idx-term">curator</span> deliberately, let it
+run unattended, and undo anything it does — including a single change it
+made three weeks ago.</p>
+<h2 id="the-idea">The idea</h2>
+<p>Here is the problem it solves. Hermes creates skills by itself: after
+a session where something novel got worked out, a background pass writes
+the procedure down as a <span class="idx-term">skill</span>. That is the
+feature that makes the agent improve, and it is also the feature that
+guarantees your library grows whether or not you are paying attention.
+Nothing about that growth is visible in a chat window.</p>
+<p>The curator is the drain for that tap. It is a maintenance pass with
+<strong>two phases</strong>, and the difference between them decides how
+much you need to care:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Cost</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Automatic transitions</td>
+<td style="text-align: left;">free, always on</td>
+<td style="text-align: left;">Walks each managed skill through
+<code>active → stale → archived</code> based on how long it has gone
+unused</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="idx-term">Consolidation</span></td>
+<td style="text-align: left;">50-100 model calls per pass, opt-in</td>
+<td style="text-align: left;">A model reads the managed skills and
+decides, per skill: keep, patch, merge overlapping ones into an
+umbrella, or archive</td>
+</tr>
+</tbody>
+</table>
+<p>The first phase is bookkeeping and you can ignore it forever. The
+second phase is a judgement call made by a model about the files that
+steer every future session — so it is off by default, and it is the only
+part of the curator that needs a habit from you.</p>
+<h3 id="what-it-is-allowed-to-touch">What it is allowed to touch</h3>
+<p>The gate is <span class="idx-term">provenance</span>, stored per
+skill, and it divides your library into two groups:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Group</th>
+<th style="text-align: left;">Examples</th>
+<th style="text-align: left;">Curator may</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Agent-created</td>
+<td style="text-align: left;">skills written by a self-improvement
+pass</td>
+<td style="text-align: left;">prune, archive, patch, merge</td>
+</tr>
+<tr>
+<td style="text-align: left;">Everything else</td>
+<td style="text-align: left;">skills you wrote or edited by hand; skills
+shipped with Hermes; anything installed from the skills hub</td>
+<td style="text-align: left;">nothing, unless you <code>adopt</code> it
+(<code>prune_builtins</code> is the one opt-in that lets old
+<em>bundled</em> skills be archived; hub skills are always exempt)</td>
+</tr>
+</tbody>
+</table>
+<p>Two more fences sit outside that table. <strong>Pinned</strong>
+skills are skipped by every automatic transition — and, worth knowing
+before you use it as an “important” flag, pinning also blocks the
+agent’s own skill-editing tool, so it means <em>“nobody touches
+this”</em>. And any skill <strong>referenced by a scheduled
+job</strong>, even a paused one, is skipped for the same reason a pinned
+skill is: a slow schedule must not be able to archive a skill out from
+under a job that expects it.</p>
+<h2 id="do-this">Do this</h2>
+<h3 id="look-before-you-touch">1. Look before you touch</h3>
+<pre class="console"><code>$ hermes curator status
+curator: ENABLED
+  runs:           0
+  last run:       never
+  last summary:   (none)
+  interval:       every 7d
+  stale after:    30d unused
+  archive after:  90d unused
+  consolidate:    off (prune-only; LLM merge pass opt-in)
+
+curator-managed skills: 112 total  (agent-created=31  bundled=81)
+  active     112
+  stale       0
+  archived    0
+
+unmanaged (no provenance marker): 60 total
+  pre-dates marker    31
+  foreground-created  29
+  never auto-staled or archived — `hermes curator adopt &lt;name&gt;` hands one over</code></pre>
+<p>Four numbers matter here: how many skills it manages, how many are
+unmanaged, how many are already stale or archived, and what the
+thresholds are. The <code>most active</code> /
+<code>least recently active</code> lists at the end of the command are
+what tell you whether a threshold is about to fire.</p>
+<p><code>hermes curator usage</code> is the same telemetry for every
+skill regardless of provenance, and
+<code>hermes curator list-unmanaged</code> is the adoption candidate
+list — it is also the command that answers “why can’t the agent edit
+this skill?”.</p>
+<h3 id="ask-what-it-would-do-in-a-run-that-cannot-change-anything">2.
+Ask what it would do, in a run that cannot change anything</h3>
+<pre class="console"><code>$ hermes curator run --dry-run</code></pre>
+<p>This produces the full review report and mutates nothing. Do this
+before the first real run, and after any change to your thresholds.</p>
+<h3 id="fence-off-what-must-not-move">3. Fence off what must not
+move</h3>
+<pre class="console"><code>$ hermes curator pin local-quality-gates
+curator: pinned &#39;local-quality-gates&#39; (will bypass auto-transitions)
+
+$ hermes curator unpin local-quality-gates</code></pre>
+<p>Pin sparingly, and remember the bidirectional fence: pinned also
+means the agent cannot patch it.</p>
+<h3 id="hand-over-what-you-want-managed">4. Hand over what you want
+managed</h3>
+<pre class="console"><code>$ hermes curator list-unmanaged
+$ hermes curator adopt cpp-build-toolchain</code></pre>
+<p>Adoption is a declaration by you, not a discovery by the tool, which
+is why it is a command rather than a default: it is the moment a skill
+you are responsible for becomes one the curator may rewrite. Adopt
+deliberately, in small batches.</p>
+<h3 id="let-it-run">5. Let it run</h3>
+<pre class="console"><code>$ hermes config get curator.enabled           # true
+$ hermes config get curator.interval_hours    # 168
+$ hermes config get curator.min_idle_hours    # 2</code></pre>
+<p>This is the set-it-and-forget-it part, and it is genuinely
+hands-off:</p>
+<ul>
+<li>The curator is <strong>not a scheduled job</strong>. It is an
+inactivity check, run when a CLI session starts, when the gateway does
+housekeeping, and by the desktop or <code>hermes serve</code>
+maintenance timer. It fires only when both <code>interval_hours</code>
+has passed <strong>and</strong> the profile has been idle
+<code>min_idle_hours</code> — so it works while you are away from the
+keyboard and never competes with a live conversation.</li>
+<li><strong>The first pass is deferred on purpose.</strong> On a new
+install the first observation seeds the clock and the first real pass
+waits one full interval. A long quiet period after installing is the
+design, not a bug.</li>
+<li>Tune the thresholds in <code>config.yaml</code> (settings belong
+here, never in <code>.env</code>):</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curator</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">interval_hours</span><span class="kw">:</span><span class="at"> </span><span class="dv">168</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">min_idle_hours</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">stale_after_days</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">archive_after_days</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">consolidate</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">prune_builtins</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div>
+<ul>
+<li>To make the review pass cheap, remember it is an ordinary auxiliary
+model slot: <code>hermes model</code> has a <strong>Curator</strong>
+entry, and <code>auto</code> means “use my main chat model”. Point it at
+something small and the reviews cost pocket change.</li>
+</ul>
+<h3 id="the-optional-heavy-pass">6. The optional heavy pass</h3>
+<pre class="console"><code>$ hermes curator run --consolidate</code></pre>
+<p>Expect it to take a while — it is dozens of model calls. Read it
+afterwards, not during:</p>
+<pre class="console"><code>$ hermes curator ledger | tail -30</code></pre>
+<h3 id="rescue">7. Rescue</h3>
+<pre class="console"><code>$ hermes curator ledger                     # every change, every actor, with ids
+$ hermes curator rollback 1a2b3c4d5e6f      # undo ONE change by entry id
+$ hermes curator list-archived              # what left the index
+$ hermes curator restore &lt;skill&gt;            # bring one back
+$ hermes curator archive &lt;skill&gt;            # put one away by hand
+$ hermes curator prune --days 120           # bulk-archive idle skills
+$ hermes curator backup                     # snapshot the whole library
+$ hermes curator purge --yes                # delete archives for good (manual only)</code></pre>
+<p><code>purge</code> is the only destructive verb in the list, it is
+never automatic, and it is gated by
+<code>curator.archive_ttl_days</code>.</p>
+<h2 id="verify-it">Verify it</h2>
+<ul>
+<li><strong>The ledger is the record.</strong> One JSONL row per
+mutation, with the actor, the skill, the changed paths, and an entry id
+you can roll back. Count rows before and after.</li>
+<li><strong>Archives are files.</strong>
+<code>ls skills/.archive/</code> shows what left the index; the skill is
+still on disk and restorable.</li>
+<li><strong>Backups are blobs.</strong> Per-mutation file contents live
+under <code>~/.hermes/.curator_backups/blobs/</code>
+(content-addressed), which is what makes single-mutation rollback
+possible.</li>
+<li><strong>Do not use <code>status</code> to prove a run
+happened.</strong> See the incident below.</li>
+</ul>
+<h2 id="what-broke-for-me">What broke for me</h2>
+<p><strong>The ledger lies about who did what.</strong> Every skill
+mutation appends to <code>skills/.curator_ledger.jsonl</code>, and the
+actor is <em>derived</em>: an explicit override wins (the CLI says
+<code>user</code>, the curator’s own walk says <code>curator</code>),
+and otherwise the background-review provenance signal is recorded as
+<code>curator</code>. In practice that means rows tagged
+<code>curator</code> are mostly the post-turn review fork — on this
+install, 533 such rows accumulated while <code>status</code> still
+reported <code>runs: 0</code>, and the number counts work the curator
+never did.</p>
+<p><strong>And then it inverted.</strong> After a completed manual
+<code>hermes curator run --consolidate</code>, the same
+<code>status</code> command still reported
+<code>runs: 0 / last run: never</code>. So the status line is not
+evidence that a run happened either. The ledger is the only trustworthy
+record, and the actor column inside it needs interpreting. Cross-check
+both, and trust neither alone.</p>
+<p><strong>The documentation and the install disagree.</strong> The
+published defaults for <code>stale_after_days</code> and
+<code>archive_after_days</code> were 14 and 30; the resolved values on a
+real install were 30 and 90. Nothing was broken — the console simply
+beats the docs page. Read
+<code>hermes config get curator.&lt;key&gt;</code> before reasoning
+about what a threshold will do.</p>
+<p><strong>The run wrote a skill while we were talking about
+it.</strong> Watching the ledger during a session showed a new skill
+appear, on the very topic under discussion, minutes after the
+conversation about it. That is the growth engine working in real time —
+and the clearest illustration of why a drain matters: the tap is
+automatic, so the removal has to be too.</p>
+<p><strong>There was no whole-library snapshot to fall back on.</strong>
+The header comment in <code>curator_backup</code> says a tarball is
+taken before any mutating pass; on this install the backup directory
+contained only per-mutation blobs, and no <code>skills.tar.gz</code> at
+all. The rollback you actually have is one file at a time.</p>
+<h2 id="pitfalls">Pitfalls</h2>
+<ul>
+<li><strong>Consolidation is a model’s opinion.</strong> A merge can
+flatten nuance, drop a pitfall, or combine two skills you think of
+separately — and when it merges, it also rewrites references to those
+skills from your scheduled jobs. Review the ledger diff after a
+consolidate run, or accept drift.</li>
+<li><strong><code>prune_builtins: true</code> makes skills
+disappear.</strong> A bundled skill that goes unused past the archive
+window leaves the index, which looks exactly like a broken installation.
+It is recoverable, but you will not know to recover it unless you are
+reading the ledger.</li>
+<li><strong>Adoption is a door, not a status.</strong> Bulk-adopting
+every unmanaged skill hands the curator your hand-written work in one
+move. Adopt the ones you want maintained.</li>
+<li><strong>Pin is bidirectional.</strong> It stops the agent from
+patching the skill as well as the curator from archiving it.</li>
+<li><strong>Nothing expires on its own.</strong> There is no TTL, no
+ephemeral flag, no auto-cleanup in the skill loader. If you want a skill
+gone, something you own has to remove it.</li>
+</ul>
+<h2 id="going-all-in-honestly">Going all in, honestly</h2>
+<p>The design is safe against loss: it never deletes, archives are
+restorable, and every mutation is individually reversible. It is not
+safe against <em>drift</em>, and drift is invisible unless something
+looks. So the honest version of set-and-forget is three commands of
+insurance and one passive check:</p>
+<ol type="1">
+<li><code>hermes curator backup</code> once, so you have a whole-library
+rollback point.</li>
+<li><code>pin</code> the handful of skills you would hate to see
+rewritten.</li>
+<li>Leave <code>consolidate: false</code> unless you want umbrella
+merges, and run it one-off when you do.</li>
+<li>Add a weekly job that reports only when the curator changed
+something — new archives, merges, or ledger rows since the last run —
+and stays silent when nothing moved. That is the checking, without the
+reading.</li>
+</ol>
+<h2 id="where-to-go-next">Where to go next</h2>
+<p>The curator keeps the <em>procedure</em> library honest. The next
+chapter is about the other half of maintenance: the per-turn budget the
+skill index spends, and the monthly checklist that keeps memory, skills
+and backups in shape.</p>
+<h1 id="key-ideas">Key ideas</h1>
+<ul>
+<li><a href="#definitive-scope">The curator only ever touches skills it
+has been given</a></li>
+</ul>
+<h1 id="index">Index</h1>
+<div class="generated-index">
+<p>Consolidation <a href="#the-idea">The idea</a></p>
+<p>curator <a href="#what-you-will-be-able-to-do">What you will be able
+to do</a></p>
+<p>provenance <a href="#what-it-is-allowed-to-touch">What it is allowed
+to touch</a></p>
+<p>skill <a href="#the-idea">The idea</a></p>
+</div>
+</body>
+</html>

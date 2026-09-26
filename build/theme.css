@@ -1,0 +1,164 @@
+/* theme.css — the book's look.
+ *
+ * Constraints that shaped it: readable on eInk (high contrast, generous line
+ * height, no fixed page furniture), readable on a phone (large base size,
+ * short measure), and identical in the HTML and EPUB builds. Anything an EPUB
+ * reader is likely to ignore (flex, grid, ::before content) is avoided.
+ */
+
+:root {
+  --ink: #16181d;
+  --ink-soft: #4a4f58;
+  --paper: #ffffff;
+  --rule: #dfe2e7;
+  --accent: #1f4e79;
+  --accent-soft: #eef3f8;
+  --definitive: #a33b17;
+  --definitive-soft: #fdf2ec;
+  --code-bg: #f5f6f8;
+  --measure: 34em;
+}
+
+html {
+  font-size: 19px;           /* large on purpose: phones and eReaders */
+}
+
+body {
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "DejaVu Serif", Georgia, serif;
+  line-height: 1.62;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2.2rem 1.2rem 4rem;
+  -webkit-text-size-adjust: 100%;
+  hanging-punctuation: first;
+}
+
+h1, h2, h3, h4 {
+  font-family: "DejaVu Sans", "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  line-height: 1.22;
+  margin: 2.2em 0 0.5em;
+  page-break-after: avoid;
+}
+
+h1 { font-size: 1.85rem; margin-top: 0; }
+h2 { font-size: 1.32rem; padding-bottom: 0.25rem; border-bottom: 2px solid var(--rule); }
+h3 { font-size: 1.08rem; }
+h4 { font-size: 1rem; color: var(--ink-soft); }
+
+p, li { margin: 0.65em 0; }
+
+a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+strong { font-weight: 700; }
+
+code, pre, kbd {
+  font-family: "DejaVu Sans Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86em;
+}
+
+code {
+  background: var(--code-bg);
+  padding: 0.1em 0.28em;
+  border-radius: 2px;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  line-height: 1.45;
+  page-break-inside: avoid;
+}
+
+pre code { background: none; padding: 0; }
+
+blockquote {
+  margin: 1.1em 0;
+  padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--rule);
+  color: var(--ink-soft);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.3em 0;
+  font-size: 0.94em;
+  page-break-inside: avoid;
+}
+
+th, td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  font-family: "DejaVu Sans", Arial, sans-serif;
+  font-size: 0.86em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--ink);
+}
+
+/* ── The definitive callout ──────────────────────────────────────────────
+ * A labelled block: the label is injected into the document by the build
+ * filter, so it renders in every output (no ::before trickery, which EPUB
+ * readers drop). Visible words, thick rule, tinted paper, high contrast.
+ */
+.definitive {
+  background: var(--definitive-soft);
+  border-left: 5px solid var(--definitive);
+  border-radius: 3px;
+  padding: 0.2rem 1rem 0.6rem;
+  margin: 1.6em 0;
+  page-break-inside: avoid;
+}
+
+.definitive-label {
+  display: inline-block;
+  font-family: "DejaVu Sans", Arial, sans-serif;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--definitive);
+  margin-right: 0.15em;
+}
+
+.definitive p:first-child { margin-top: 0.7em; }
+
+/* ── Tables of contents and the generated index ───────────────────────── */
+
+nav#TOC, #TOC {
+  background: var(--accent-soft);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.6em 0 2.4em;
+  font-family: "DejaVu Sans", Arial, sans-serif;
+  font-size: 0.92em;
+}
+
+#TOC ul { margin: 0.35em 0; padding-left: 1.1em; }
+#TOC li { margin: 0.18em 0; }
+#TOC a { text-decoration: none; }
+
+.generated-index p {
+  font-family: "DejaVu Sans", Arial, sans-serif;
+  font-size: 0.95em;
+  margin: 0.35em 0;
+  padding-left: 1.1em;
+  text-indent: -1.1em;      /* hanging indent, the way indexes look */
+}
+
+.generated-index a { text-decoration: none; }
+.generated-index a:hover { text-decoration: underline; }
+
+.idx-term { border-bottom: 1px dotted var(--rule); }

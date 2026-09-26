@@ -1,0 +1,21 @@
+% book-header.tex — LaTeX preamble additions for the PDF build.
+% Loaded via pandoc --include-in-header. Tectonic provides everything else.
+
+\usepackage{imakeidx}
+\makeindex[intoc]
+
+% The definitive callout: pandoc's LaTeX writer cannot know our class, so the
+% build filter emits this environment explicitly.
+\newenvironment{definitivebox}{%
+  \par\medskip\noindent
+  \begin{quote}%
+}{%
+  \end{quote}\medskip\par
+}
+
+% The generated index page: a hanging-indent list, no page furniture.
+\newenvironment{generatedindex}{%
+  \begin{list}{}{\setlength{\leftmargin}{1.2em}\setlength{\itemindent}{-1.2em}}%
+}{%
+  \end{list}
+}

@@ -8,9 +8,10 @@ and the mistakes made on the way. The interesting material is not the feature
 list — it is how memory caps, the skill index, profiles, background work and the
 curator quietly interact.
 
-**Status: plan only.** There is no chapter content yet. The plan — what the book
-covers, in what order, and how each chapter gets written — is in
-[`plan.md`](plan.md).
+**Status: written.** The plan is fixed; chapter 10 (the curator) exists as the
+worked example, and the three output formats are built from the same Markdown
+source. See [`plan.md`](plan.md) for what the book covers, and
+[`samples/`](samples/README.md) for the built sample.
 
 ## What the book covers
 

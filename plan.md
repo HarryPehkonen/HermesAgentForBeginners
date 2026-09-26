@@ -3,8 +3,10 @@
 A book that documents learning Hermes Agent from the ground up, in public,
 with the mistakes left in.
 
-**Status:** plan only. No chapter content exists yet. This file is the
-contract for what the book will cover and how each chapter gets written.
+**Status:** plan, plus one sample chapter. Chapter 10 (the curator) exists as the
+worked example that the output formats are being chosen against — built to HTML,
+EPUB and PDF from the same Markdown source. See `chapters/10-the-curator.md` and
+`build/`.
 
 ---
 
@@ -178,10 +180,55 @@ Rules:
 ```
 README.md        what the book is, who it is for, how to follow along
 plan.md          this file
-chapters/        one file per chapter, numbered, no content yet
+chapters/        one file per chapter, numbered
 appendix/        glossary and the gotchas page
+build/           the build pipeline: filter, theme, metadata, script
+samples/         committed outputs of the sample chapter (generated; see below)
+dist/            build output (git-ignored)
 LICENSE          Unlicense
 ```
+
+## Production
+
+Source is **Markdown**, and the outputs are generated from it:
+
+```bash
+./build/build.sh              # dist/book.html, dist/book.epub, dist/book.pdf
+```
+
+Storage: `pandoc` (the converter) and `tectonic` (a self-contained LaTeX engine)
+— static binaries, no TeX Live, no root. Both are expected on `PATH`, defaulting
+to `~/.local/bin`.
+
+### Markers — the only syntax the book adds to Markdown
+
+Because a generated list cannot drift from its source, everything that appears
+in two places is generated from one marker:
+
+| Marker | Meaning |
+| :--- | :--- |
+| `[term]{.idx}` | An index entry. Gets a page number in the PDF's printed index and a link to its section in the HTML/EPUB index. |
+| `::: {.definitive title="…"}` | A definitive block: styled as a labelled callout, and collected into the generated "Key ideas" list. |
+| `::: {#book-index}` | Where the index is rendered. |
+| `::: {#key-ideas}` | Where the key-ideas list is rendered. |
+
+`build/book.lua` is the filter that implements this. Two things about it are
+worth knowing before editing: pandoc's `walk` visits an element's children
+*before* the element itself, so section tracking has to walk blocks top-down by
+hand; and a fenced div's title is an **attribute** (`::: {.definitive
+title="…"}`), not a `title:` line in the body.
+
+### Outputs and why each exists
+
+- **HTML** — one self-contained file (CSS embedded). The website form.
+- **EPUB** — for eInk; open with Calibre or copy to the device. Reflowable, so
+  its index links to *sections* rather than page numbers.
+- **PDF** — via LaTeX: real typography, and a printed index with page numbers
+  (`imakeidx`) alongside the generated linked one.
+
+Still open: whether the PDF keeps the printed page-number index (it needs a
+`makeindex` pass the engine may or may not run) or matches the other two formats
+with a link-based index. The sample exists to decide that.
 
 ## Milestones
 

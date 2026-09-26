@@ -25,5 +25,11 @@ chapter template, voice, and non-goals. Read it before writing anything.
 
 1. Follow the template in `plan.md` ("How a chapter gets written").
 2. Name the file `chapters/NN-slug.md`, numbered as in the plan.
-3. Update `plan.md` only if the arc itself changes, not merely because a chapter
+3. Use the book's markers where they apply — `[term]{.idx}` for index entries,
+   `::: {.definitive title="…"}` for definitive blocks — and let the build
+   generate the index and the Key ideas list. Never hand-write either list.
+4. Build all three formats before claiming a chapter is done:
+   `./build/build.sh`, then check `dist/book.html`, `dist/book.epub`,
+   `dist/book.pdf`.
+5. Update `plan.md` only if the arc itself changes, not merely because a chapter
    got written.

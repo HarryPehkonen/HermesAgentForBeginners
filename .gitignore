@@ -6,6 +6,17 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Build output (regenerate with ./build/build.sh; see samples/ for committed copies)
+dist/
+
+# LaTeX intermediates from the PDF build
+*.aux
+*.idx
+*.ind
+*.ilg
+*.log
+*.out
+
 # Scratch space for drafts and captured output
 scratch/
 *.tmp
